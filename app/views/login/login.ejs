@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<title>Login</title>
+		<% include ../partials/head %>
+	</head>
+	<body class="red lighten-2">
+		<div class="valign-wrapper row login-box" >
+            <div class="col card hoverable s10 pull-s1 m6 pull-m3 l4 pull-l4">
+                <form method="POST" action="/login">
+                    <div class="card-content">
+                        <% if(validacao.length > 0) { %>
+                            <div id="card-alert" class="card red lighten-5">
+                                <div class="card-content red-text">
+                                    <% for(var i = 0; i < validacao.length; i++) { %>
+                                        <p><%=validacao[i].msg%></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+                        <span class="card-title">Entre com seu usuário e senha</span>
+                        <div class="row">
+                        <div class="input-field col s12">
+                            <label for="username">Usuário</label>
+                            <input type="text" class="validate" name="username" id="username" />
+                        </div>
+                        <div class="input-field col s12">
+                            <label for="password">Senha </label>
+                            <input type="password" class="validate" name="password" id="password" />
+                        </div>
+                        </div>
+                    </div>
+                    <div class="card-action right-align">
+                        <input type="submit" class="btn waves-effect waves-light" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

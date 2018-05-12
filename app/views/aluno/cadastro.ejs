@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<title>Cadastro de Alunos</title>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<header>
+			<% include ../partials/header %>
+		</header>
+
+		<div class="container margin-top-body">
+			<div class="row">
+				<form class="col s12" method="POST" action="/aluno">
+					<div class="row">
+						<div class="input-field col s4">
+							<input id="nr_matricula" name="nr_matricula" type="text" class="validate">
+							<label for="nr_matricula">N° Matrícula</label>
+						</div>
+						<div class="input-field col s8">
+							<input id="nome" name="nome" type="text" class="validate">
+							<label for="nome">Nome</label>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="input-field col s4 validate">
+							<select name="sexo">
+								<option value="" disabled selected>Sexo</option>
+								<option value="M">Masculino</option>
+								<option value="F">Feminino</option>
+							</select>
+						</div>
+						<div class="input-field col s8">
+							<input id="nome_mae" name="nome_mae" type="text" class="validate">
+							<label for="nome_mae">Nome da mãe</label>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="input-field col s6">
+							<input id="rg" name="rg" type="text" class="validate mask-rg">
+							<label for="rg">RG</label>
+						</div>
+						<div class="input-field col s6">
+							<input id="cpf" name="cpf" type="text" class="validate mask-cpf">
+							<label for="cpf">CPF</label>
+						</div>
+					</div>
+
+					<div class="row">
+							<div class="input-field col s6">
+								<input type="text" class="datepicker validate" id="dt_nascimento" name="dt_nascimento">
+								<label for="dt_nascimento">Data de Nascimento</label>
+							</div>
+							<div class="input-field col s6">
+								<input type="text" class="datepicker validate" id="dt_matricula" name="dt_matricula">
+								<label for="dt_matricula">Data de matrícula</label>
+							</div>
+					</div>
+
+					<div class="row">
+						<div class="input-field col s4">
+							<input type="text" class="validate" id="nr_armario" name="nr_armario">
+							<label for="nr_armario">N° Armário</label>
+						</div>
+						<div class="input-field col s8">
+							<input type="text" class="validate" id="local_armario" name="local_armario">
+							<label for="local_armario">Local Físico do Armário</label>
+						</div>
+					</div>
+
+					<button class="btn waves-effect waves-light right" type="submit">Salvar
+						<i class="material-icons right">send</i>
+					</button>
+					
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

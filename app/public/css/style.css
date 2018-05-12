@@ -1,0 +1,12 @@
+html,
+body,
+.login-box {
+  height: 100%;
+}
+.margin-top-body{
+    margin-top: 20px
+}
+
+.waves-button-input{
+    color: white;
+}

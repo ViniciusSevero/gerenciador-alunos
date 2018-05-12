@@ -1,0 +1,20 @@
+<!-- Dropdown Structure -->
+<ul id="options_usuario" class="dropdown-content">
+	<li><a href="/logout">Sair</a></li>
+</ul>
+<ul id="options_aluno" class="dropdown-content">
+	<li><a href="#!">Cadastro</a></li>
+    <li><a href="#!">Lista</a></li>
+</ul>
+<nav>
+	<div class="nav-wrapper">
+		<ul class="right hide-on-med-and-down">
+            <li><a href="/aluno">Cadastrar Alunos</a></li>
+            <li><a href="/alunos">Pesquisar Alunos</a></li>
+            <!-- Dropdown Trigger -->
+            <li><a class="dropdown-trigger" href="#!" data-target="options_usuario"><%= user.username %><i class="material-icons right">arrow_drop_down</i></a></li>
+		</ul>
+	</div>
+</nav>
+		
+

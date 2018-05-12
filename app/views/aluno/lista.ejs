@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<title>Lista de Alunos</title>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<div class="row margin-top-body filters">
+			<div class="input-field col s2 no-hide">
+				<select id="filter" name="filter">
+					<option value="" disabled selected>Pesquisar por:</option>
+					<option value="nome">Nome</option>
+					<option value="nome_mae">Nome da mãe</option>
+					<option value="cpf">CPF</option>
+					<option value="rg">RG</option>
+					<option value="dt_matricula">Data de matrícula</option>
+					<option value="nr_matricula">N° Matrícula</option>
+					<option value="dt_nascimento">Data de nascimento</option>
+				</select>
+				<label>Pesquisar por:</label>
+			</div>
+
+			<div class="input-field col s2 hide">
+				<input id="nome" type="text" class="validate filter">
+				<label for="nome">Nome</label>
+			</div>
+
+			<div class="input-field col s2 hide">
+				<input id="nome_mae" type="text" class="validate filter">
+				<label for="nome_mae">Nome da mãe</label>
+			</div>
+
+			<div class="input-field col s2 hide">
+				<input id="rg" type="text" class="validate filter mask-rg">
+				<label for="rg">RG</label>
+			</div>
+			<div class="input-field col s2 hide">
+				<input id="cpf" type="text" class="validate filter mask-cpf">
+				<label for="cpf">CPF</label>
+			</div>
+
+			<div class="input-field col s2 hide">
+				<input id="nr_matricula" type="text" class="validate filter">
+				<label for="nr_matricula">N° Matrícula</label>
+			</div>
+			
+			
+			<div class="input-field col s2 hide">
+				<input type="text" class="datepicker validate filter" id="dt_ini">
+				<label for="dt_ini">Data Início</label>
+			</div>
+			<div class="input-field col s2 hide">
+				<input type="text" class="datepicker validate filter" id="dt_fim">
+				<label for="dt_fim">Data Fim</label>
+			</div>
+
+			<div class="input-field col s2 hide">
+				<select id="sexo" class="filter">
+					<option value="" disabled selected>Sexo:</option>
+					<option value="M">Masculino</option>
+					<option value="F">Feminino</option>
+				</select>
+				<label>Sexo:</label>	
+			</div>
+			
+			<div class="input-field col s2 valign-wrapper">
+				<button class="btn waves-effect waves-light " type="submit" id="btn-pesquisar">Buscar
+					<i class="material-icons right">search</i>
+				</button>
+			</div>
+		</div>
+			
+		<div class="row">
+			<table class="highlight margin-top-body">
+				<thead>
+				<tr>
+					<th>N° Matricula</th>
+					<th>Nome</th>
+					<th>Mãe</th>
+					<th>RG</th>
+					<th>CPF</th>
+					<th>Dt. Nasicmento</th>
+					<th>Dt. Matrícula</th>
+					<th>Usuário responsável</th>
+					<th>Ações</th>
+				</tr>
+				</thead>
+
+				<tbody>
+				
+				</tbody>
+			</table>
+
+			<ul class="pagination right"></ul>
+		</div>         
+	</body>
+</html>
+
+<script>
+	let actualPage = 1;
+	$(document).ready(function(){
+		buscarAlunos();
+		$('#btn-pesquisar').on('click', buscarAlunos);
+		$(document).on('click', 'ul.pagination li:not(.disabled)', navigate);
+	});
+
+	function buscarAlunos(){
+		var filters = JSON.stringify(loadFilters());
+
+		$.ajax({
+			url: '/alunos/buscar',
+			data: {"filters": filters, "page": actualPage},
+			success: function(data){
+				actualPage = data.actualPage;
+				loadTable(data.itens);
+				loadPagination(data.pages);
+			},
+			dataType: "json",
+			type: "POST"
+		});
+	}
+
+	function loadFilters(){
+		var filters = [];
+		
+		// { dt_matricula: {$gte: 20150101}}
+		if($('#filter').val() == 'dt_matricula' || $('#filter').val() == 'dt_nascimento'){
+			let id = $('#filter').val();
+			var data_ini = $('#dt_ini').val();
+			var data_fim = $('#dt_fim').val();
+			if(data_ini || data_ini){
+				var obj = {};
+				obj[id] = {};
+				if(data_ini && data_ini != ""){
+					obj[id]["$gte"] = dateToNumber(data_ini);
+				}
+				if(data_fim && data_fim != ""){
+					obj[id]["$lt"] = dateToNumber(data_fim);
+				}
+
+				filters.push(obj);
+			}
+		}
+
+		var inputFilters = $('input.filter:visible, select.filter', "div.input-field:not(.no-hide):not(.input-field.hide)")
+								.not("#filter")
+								.not("#dt_ini")
+								.not("#dt_fim");
+		
+		let regexInputs = ['nome_mae', 'nome'];
+		inputFilters.each(function(){
+			if($(this).val()){
+				let id = $(this).attr('id');
+				var obj = {};
+				if(regexInputs.indexOf(id) > -1){
+					obj[id] =  {'$regex': $(this).val()};
+				}else{
+					obj[id] = $(this).val();
+				}
+				filters.push(obj);
+			}
+		});
+
+		if(filters.length > 0)
+			return {$and: filters} // {$and: [{ dt_matricula: {$gte: 20150101}}]}
+		else
+			return {};
+		
+	}
+
+	function loadTable(data){
+		$('table tbody').html('');
+		for(var i = 0; i < data.length; i++){
+			$('table tbody').append(
+				`
+					<tr>
+						<td>` + data[i].nr_matricula + `</td>
+						<td>` + data[i].nome + `</td>
+						<td>` + data[i].nome_mae + `</td>
+						<td>` + data[i].rg + `</td>
+						<td>` + data[i].cpf + `</td>
+						<td>` + formatDate(data[i].dt_nascimento) + `</td>
+						<td>` + formatDate(data[i].dt_matricula) + `</td>
+						<td>` + (data[i].usuario_responsavel ? data[i].usuario_responsavel : '' )  + `</td>
+						<td>
+							<a class="btn-floating btn-small green">
+								<i class="large material-icons">mode_edit</i>
+							</a>
+							<a class="btn-floating btn-small red">
+								<i class="large material-icons">delete</i>
+							</a>
+						</td>
+					</tr>
+				`
+			);
+		}
+	}
+
+	function loadPagination(pages){
+		$('ul.pagination').html('<li ' + (actualPage == 1 ? 'class="disabled"' : 'class="waves-effect previous"' )  + '><a href="#!"><i class="material-icons">chevron_left</i></a></li>')
+		for(var i = 1; i<=pages; i++){
+			if(i == actualPage){
+				$('ul.pagination').append('<li class="active"><a href="#!">' + i + '</a></li>');
+			}else{
+				$('ul.pagination').append('<li class="waves-effect"><a href="#!">' + i + '</a></li>');
+			}
+		}
+		$('ul.pagination').append('<li ' + (actualPage == pages ? 'class="disabled"' : 'class="waves-effect next"')  + '><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
+	}
+
+	function navigate(){
+		let isPrevious = $(this).hasClass('previous');
+		let isNext = $(this).hasClass('next');
+
+		if (isPrevious) {
+			actualPage = parseInt(actualPage) - 1;
+		} else if (isNext) {
+			actualPage = parseInt(actualPage) + 1;
+		} else {
+			actualPage = parseInt($(this).find('a').text());
+		}
+		
+		buscarAlunos();
+	}
+</script>
