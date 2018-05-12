@@ -1,6 +1,6 @@
 var mongoClient = require('mongodb').MongoClient;
 
-const url = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost:27017';  
+const url = process.env.MONGODB_DB_URL || 'mongodb://localhost:27017';  
 const database = process.env.MONGODB_DATABASE || 'gerenciador_alunos';
 var connectionInstance = null;
 
