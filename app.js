@@ -1,7 +1,7 @@
 var app = require('./config/server');
-var porta = process.env.PORT || 3000;
-
-app.listen(porta, () => {
-    console.log("servidor está rodando na porta " + porta + " com Express");
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+ 
+app.listen(server_port, server_ip_address, function () {
+  console.log( "Listening on " + server_ip_address + ", port " + server_port )
 });
-
