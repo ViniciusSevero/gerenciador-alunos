@@ -11,11 +11,11 @@ var connMongoDb = function(callback){
     }
 
     mongoClient.connect(url, function(error, client) {
-        connectionInstance = client.db(database)
         if (error) {
             console.log("error", error);
             throw new Error(error);
         }
+        connectionInstance = client.db(database)
         callback(connectionInstance);
         //client.close();
     });
