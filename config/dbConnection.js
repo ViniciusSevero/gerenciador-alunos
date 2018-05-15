@@ -10,6 +10,7 @@ var connMongoDb = function(callback){
         return;
     }
 
+    console.log('url', url);
     mongoClient.connect(url, function(error, client) {
         if (error) {
             console.log("error", error);
