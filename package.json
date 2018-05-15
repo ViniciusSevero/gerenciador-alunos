@@ -4,7 +4,7 @@
   "description": "site de noticias",
   "main": "noticias.js",
   "scripts": {
-    "start": "node app",
+    "start": "node app"
   },
   "author": "Vinicius Severo",
   "license": "ISC",
